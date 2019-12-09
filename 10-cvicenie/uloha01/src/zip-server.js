@@ -1,5 +1,5 @@
 const http = require("http");
-const {pipeline } = require("stream");
+const {pipeline} = require("stream");
 
 const {
     createDeflate, createInflate,

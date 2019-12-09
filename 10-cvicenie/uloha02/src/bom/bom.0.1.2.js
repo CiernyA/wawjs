@@ -47,9 +47,27 @@ class AddBom extends Transform {
 }
 
 class RemoveBom extends Transform {
-
-    _transform(chunk,enc, cb) {
-      this.push(chunk);
+    constructor() {
+        super();
+        this.isFirstCall = true
+    }
+    
+    _transform(chunk, enc, cb) {
+      const bufBom = Buffer.from([0xEF, 0xBB, 0xBF]);
+      if (this.isFirstCall) {
+        const first3Bytes = chunk.slice(0, 3);
+        if (first3Bytes.equals(bufBom)) {
+            this.push(chunk.slice(3));
+        }
+        else{
+            this.push(chunk);
+        }
+        this.isFirstCall = false;
+      }
+      else{
+        this.push(chunk);
+      }
+      
       cb();
     
     }
